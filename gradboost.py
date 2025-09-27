@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd 
 from typing import Literal
 eps = 1e-6
-estimators={"mse" : DecisionTreeRegressor, "entropy" : DecisionTreeClassifier}
+
 
 class MyGradientBoosting:
     def __init__(self, criterion_name: Literal['mse', 'entropy'] = 'mse', learning_rate: float=0.001, n_estimators: int=100, max_depth: int=3):
@@ -28,7 +28,7 @@ class MyGradientBoosting:
             Max depth of every tree in the ansamble.    
         '''
         criterion_name = criterion_name.lower()
-        
+        self.estimators={"mse" : DecisionTreeRegressor, "entropy" : DecisionTreeClassifier}
         if criterion_name == 'mse':
             self.criterion = mse
         elif criterion_name == 'entropy':
@@ -145,7 +145,7 @@ class MyGradientBoosting:
         for _ in np.arange(self.n_estimators):
             gradient = self.grads(y_pred=cur_pred, y_real=y)
 
-            tree_class = estimators[self.criterion_name]
+            tree_class = self.estimators[self.criterion_name]
             tree = tree_class(max_depth=self.max_depth)
             tree.fit(X, gradient)            
             cur_pred += self.learning_rate * tree.predict(X)
